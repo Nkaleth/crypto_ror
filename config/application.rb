@@ -2,6 +2,8 @@ require_relative "boot"
 
 require "rails/all"
 
+require 'factory_bot_rails'
+
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
@@ -29,4 +31,9 @@ module MarketPlaceRor
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
   end
+end
+
+config.generators do |g|
+  g.test_framework :rspec, fixture: true
+  g.fixture_replacement :factory_bot, dir: 'spec/factories'
 end
