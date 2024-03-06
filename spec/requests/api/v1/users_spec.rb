@@ -83,4 +83,12 @@ RSpec.describe "Api::V1::Users", type: :request do
       end
     end
   end
+
+  describe 'DELETE #destroy' do
+    it 'should destroy User' do
+      expect { delete api_v1_user_path(@user), as: :json }.to change(User, :count).by(-1)
+
+      expect(response).to have_http_status(:no_content)
+    end
+  end
 end
