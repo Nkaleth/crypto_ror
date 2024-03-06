@@ -47,4 +47,40 @@ RSpec.describe "Api::V1::Users", type: :request do
       end
     end
   end
+
+  describe 'PATCH #update' do
+    context 'with valid parameters' do
+      let(:new_attributes) { { user: { email: @user.email, password: '123456' } } }
+
+      before do
+        patch api_v1_user_path(@user), params: new_attributes
+      end
+
+      it 'updates the user' do
+        @user.reload
+        expect(@user.authenticate('123456')).to be_truthy
+      end
+
+      it 'returns http success' do
+        expect(response).to have_http_status(:success)
+      end
+    end
+
+    context 'with invalid parameters' do
+      let(:invalid_attributes) { { user: { email: 'bad_email', password: '123456' } } }
+
+      before do
+        patch api_v1_user_path(@user), params: invalid_attributes
+      end
+
+      it 'does not update the user' do
+        @user.reload
+        expect(@user.email).not_to eq('bad_email')
+      end
+
+      it 'returns a :unprocessable_entity status' do
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+    end
+  end
 end
